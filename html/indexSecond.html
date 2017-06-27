@@ -15,16 +15,16 @@
     }
     div.years_button {
       position: absolute;
-      top: 120px;
-      left: 200px;
+      top: 100px;
+      left: 30px;
       width: 50px;
       height: auto;
       border-radius: 4px;
       background-color: rgb(251, 201, 127);
     }
   </style>
-  <script src="lib/d3.v4.3.0.js"></script>
-  <script src="lib/dimple.v2.3.0.js"></script>
+  <script src="/lib/d3.v4.3.0.js"></script>
+  <script src="/lib/dimple.v2.3.0.js"></script>
   <script type="text/javascript">
     function drawFirst(data) {
       var svgFirst = dimple.newSvg("#svgFirst", 960, 500);
@@ -44,26 +44,17 @@
       console.log('data', data)
       // 创建图表
       var chartFirst = new dimple.chart(svgFirst, data);
-      chartFirst.setBounds(90, 30, 800, 400)
+      chartFirst.setBounds(60, 30, 800, 400)
 
       // 添加两条 y 轴
       // 导入参数
       var x = chartFirst.addCategoryAxis("x", "country");
       var y1 = chartFirst.addMeasureAxis("y", "budget");
       var y2 = chartFirst.addMeasureAxis("y", "gross");
-      var myLegend = chartFirst.addLegend(60, 10, 800, 20, "right");
-      myLegend.fontSize = "18px";
+
       // x 轴排序方式
       x.addOrderRule("country", false);
-      x.title = "国家";
-      x.fontSize = "18px";
 
-      y1.title = "预算";
-      y1.fontSize = "18px";
-
-
-      y2.title = "票房";
-      y2.fontSize = "18px";
       // y1 轴加入气泡
       var budget = chartFirst.addSeries("预算", dimple.plot.bubble, [x, y1]);
       budget.aggregate = dimple.aggregateMethod.sum;
@@ -73,14 +64,7 @@
       // y2 轴加入柱状图
       var gross = chartFirst.addSeries("票房", dimple.plot.bar, [x, y2]);
       gross.aggregate = dimple.aggregateMethod.sum;
-
-      var firstStoryboard = chartFirst.setStoryboard("title_year", function(e) {
-        // d3.select(".dimple-storyboard-label")
-        // .text("上映年份: " + e)
-        console.log('e', e);
-      });
-      firstStoryboard.fontSize = "18px";
-
+      var firstStoryboard = chartFirst.setStoryboard("title_year");
       var isStart = true;
       var buttons = d3.select("body")
               .append("div")
@@ -104,7 +88,7 @@
             .text(function(d) {
                 return d;
             });
-          firstStoryboard.pauseAnimation()
+          firstStoryboard.stopAnimation()
         } else {
           d3.select(this)
             .data(["暂停"])
@@ -120,9 +104,6 @@
       });
 
       chartFirst.draw();
-
-      // d3.selectAll(".dimple-storyboard-label")
-      // .text("year")
     }
     function drawSecond(data) {
       var svgSecond = dimple.newSvg("#svgSecond", 960, 500);
@@ -139,10 +120,8 @@
       chartSecond.setBounds(60, 30, 800, 400)
       var x = chartSecond.addCategoryAxis("x", "imdb_score");
       x.addOrderRule("imdb_score");
-      var y = chartSecond.addMeasureAxis("y", "imdb_score");
-      x.title = "IMDB评分统计量";
-      y.title = "IMDB评分";
-      var gross = chartSecond.addSeries("评分分布", dimple.plot.bar, [x, y]);
+      var y = chartSecond.addMeasureAxis("y", "gross");
+      var gross = chartSecond.addSeries("评分与票房", dimple.plot.bar, [x, y]);
       chartSecond.draw();
     }
     function draw(data) {
@@ -150,14 +129,14 @@
       drawSecond(data);
     }
   </script>
-  <script type="text/javascript">d3.csv("data/movie_metadata.csv", draw);</script>
+  <script type="text/javascript">d3.csv("/data/movie_metadata.csv", draw);</script>
 </head>
 <html>
   <body>
     <h1>IMDB 电影数据分析</h1>
     <h2>各国电影投资与票房关系(选取部分数据)</h2>
     <div id="svgFirst"></div>
-    <h2>电影评分分布</h2>
+    <h2>电影票房与评分的关系</h2>
     <div id="svgSecond"></div>
   </body>
 </html>
