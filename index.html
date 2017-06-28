@@ -141,6 +141,7 @@
       x.title = "IMDB评分";
       y.title = "电影数量";
       var gross = chartSecond.addSeries("评分分布", dimple.plot.bar, [x, y]);
+      gross.aggregate = dimple.aggregateMethod.count;
       chartSecond.draw();
     }
     function draw(data) {
